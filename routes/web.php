@@ -54,3 +54,16 @@ Route::middleware('auth')->group(function () {
         Route::patch('/pesanan/{order}/status', [SellerOrderController::class, 'updateStatus'])->name('orders.status');
     });
 });
+
+// API JSON untuk etalase Vue dan keranjang. Grup ini sengaja memakai
+// middleware web agar keranjang berbasis sesi dan token CSRF berfungsi,
+// karena aplikasi tidak memakai autentikasi token.
+Route::prefix('api')->group(function () {
+    Route::get('/products', [\App\Http\Controllers\Api\ProductController::class, 'index']);
+    Route::get('/products/{product}', [\App\Http\Controllers\Api\ProductController::class, 'show']);
+    Route::get('/categories', [\App\Http\Controllers\Api\ProductController::class, 'categories']);
+    Route::get('/cart', [\App\Http\Controllers\Api\CartController::class, 'show']);
+    Route::post('/cart', [\App\Http\Controllers\Api\CartController::class, 'add']);
+    Route::patch('/cart/{productId}', [\App\Http\Controllers\Api\CartController::class, 'update']);
+    Route::delete('/cart/{productId}', [\App\Http\Controllers\Api\CartController::class, 'remove']);
+});
